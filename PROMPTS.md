@@ -1,142 +1,222 @@
 # PROMPTS.md
 
-## ABTalks Vibe Code Hackathon — Autonomous AI Creator
+## Autonomous AI Creator — Development Prompts
 
-**AI development assistant:** ChatGPT only
-
-This file records the actual prompts used during development. Keep adding future project prompts chronologically.
+This file documents the prompts and instructions used during the development of the Autonomous AI Creator project.
 
 ---
 
-### Prompt 1 — Breeth clarification
+## 1. Project Architecture
 
-**User:**
-> i am participating for vicadathon,now they have asked me to use breeth,i dont know what is it
+### Prompt
 
-**Purpose:** Understand Breeth and whether it is mandatory.
+> Build an autonomous AI content creator that can independently discover current technology topics, evaluate them using an AI editorial decision engine, remember previously published topics, and publish posts when they meet a defined quality threshold.
 
----
+### Purpose
 
-### Prompt 2 — Hackathon announcement
+Used to define the overall architecture and autonomous workflow of the application.
 
-**User:**
-> The hackathon kicks off at 8:00 PM IST today! Before you begin, make sure you're ready:
-> Problem Statement, Breeth AI Documentation, Free Breeth AI Starter Pack...
+The resulting workflow is:
 
-**Purpose:** Understand the hackathon preparation instructions.
+DISCOVER → JUDGE → REMEMBER → PUBLISH
 
 ---
 
-### Prompt 3 — Participant Q&A
+## 2. Autonomous AI Agent
 
-**User:** Provided the ABTalks Vibe Code Hackathon Participant Q&A PDF.
+### Prompt
 
-**Purpose:** Extract official requirements, including public repository, live deployment, prompt log, allowed AI tools, Breeth being optional, authenticity checks, and judging.
+> Create an autonomous AI agent called NOVA that focuses on AI and technology. The agent should discover technology news, evaluate topics based on relevance and significance, avoid duplicate coverage, generate posts, and maintain editorial memory.
 
----
+### Purpose
 
-### Prompt 4 — Autonomous AI Creator problem statement
-
-**User:** Provided the complete Autonomous AI Creator problem statement and submission rules.
-
-**Purpose:** Design a project that independently discovers topics, applies editorial judgment, maintains a consistent AI/technology persona, remembers previous content, publishes over time, exposes the required two HTTP endpoints, and returns rationale and sources.
+Used to design the NOVA agent and its autonomous behavior.
 
 ---
 
-### Prompt 5 — ChatGPT-only development
+## 3. Topic Discovery
 
-**User:**
-> i want to use chat gpt only,and take a record of this whole prompts
+### Prompt
 
-**Purpose:** Use ChatGPT only as the AI development assistant and maintain a complete prompt record.
+> Implement a topic discovery service that retrieves current technology and AI-related stories and provides structured topic information including title, link, description, and publication date.
 
----
+### Purpose
 
-### Prompt 6 — Preferred tech stack
-
-**User:**
-> what is the preferrable techstack
-
-**Purpose:** Select a practical stack for the hackathon.
-
-**Decision:** React + Vite, Node.js + Express, MongoDB Atlas, OpenAI API, live RSS/news sources, Node.js autonomous worker, Vercel frontend, Render backend, GitHub.
+Used to create the news/topic discovery pipeline.
 
 ---
 
-### Prompt 7 — Remove Breeth
+## 4. Editorial Decision Engine
 
-**User:**
-> leave about breeth
+### Prompt
 
-**Purpose:** Remove Breeth from the project architecture.
+> Create an AI editorial decision engine that receives a list of candidate topics and the agent's previous posts. It should select the most relevant topic, assign a score from 0 to 100, decide whether to publish or reject the topic, and provide a reason for the decision.
 
-**Decision:** MongoDB will handle application state and memory. Breeth is not used.
+### Purpose
 
----
+Used to implement the autonomous decision-making stage.
 
-### Prompt 8 — Complete implementation
-
-**User:**
-> then give complete code for this project
-
-**Purpose:** Generate the complete initial project implementation using ChatGPT only, without Breeth.
-
-**Implementation scope:**
-- React + Vite frontend
-- Node.js + Express backend
-- MongoDB Atlas persistence
-- OpenAI Responses API
-- RSS-based live topic discovery
-- Editorial scoring and rejection
-- Consistent NOVA persona
-- Autonomous background worker
-- Persistent feed
-- Required `/api/agent/init`
-- Required `/api/agent/feed`
-- Publishing rationale and sources
-- Status and editorial decision endpoints
-- README and local setup
+The agent uses a minimum publishing score to prevent low-quality topics from being published.
 
 ---
 
-## Project decisions
+## 5. Editorial Memory
 
-### Persona
-**NOVA — AI Systems Watchdog**
+### Prompt
 
-NOVA is a technically grounded, skeptical-of-hype AI systems persona focused on AI agents, LLMs, AI infrastructure, developer tools, AI security, open-source AI, machine learning, and robotics.
+> Store previous agent decisions and published posts in MongoDB so that the AI can consider previous coverage when evaluating new topics and avoid publishing duplicate topics.
 
-### Memory
-MongoDB stores:
-- agent state
-- published posts
-- editorial decisions
-- timestamps
-- scores
-- source links
+### Purpose
 
-### Autonomous loop
-The backend worker:
-1. Discovers live topics.
-2. Evaluates candidates.
-3. Checks previous publications through MongoDB.
-4. Rejects weak/repetitive topics.
-5. Generates a post when the editorial score passes the threshold.
-6. Stores the result.
-7. Repeats on the configured interval.
+Used to implement persistent editorial memory using MongoDB.
 
-### Required evaluator API
+---
+
+## 6. Duplicate Prevention
+
+### Prompt
+
+> Add duplicate detection so that the autonomous agent does not publish the same topic more than once for the same agent.
+
+### Purpose
+
+Used to prevent repeated publications.
+
+---
+
+## 7. AI Post Generation
+
+### Prompt
+
+> Generate a concise technology post from the selected topic. The writing should be technically grounded, skeptical of hype, concise, curious, and focused on what the development means for builders and the AI ecosystem.
+
+### Purpose
+
+Used to define NOVA's writing style and generate the final publication.
+
+---
+
+## 8. Autonomous Worker
+
+### Prompt
+
+> Make the agent operate autonomously after initialization. It should immediately perform an autonomous cycle and then continue running periodically without requiring another user prompt.
+
+### Purpose
+
+Used to implement the autonomous worker loop.
+
+The worker:
+
+1. Discovers topics.
+2. Loads previous posts.
+3. Evaluates candidate topics.
+4. Stores the editorial decision.
+5. Rejects topics that do not meet the threshold.
+6. Generates a post for accepted topics.
+7. Stores the published post.
+8. Repeats automatically after the configured interval.
+
+---
+
+## 9. Configurable Autonomy
+
+### Prompt
+
+> Make the autonomous cycle interval configurable through an environment variable so that the frequency of autonomous cycles can be changed without modifying the source code.
+
+### Purpose
+
+Used to create the `AUTONOMY_INTERVAL_MINUTES` configuration.
+
+---
+
+## 10. Minimum Publishing Score
+
+### Prompt
+
+> Add a configurable minimum editorial score. The agent should publish only when the AI decision is publish and the score meets the configured minimum threshold.
+
+### Purpose
+
+Used to implement quality control.
+
+The default minimum publishing score is:
+
+72/100
+
+---
+
+## 11. Gemini Integration
+
+### Prompt
+
+> Replace the OpenAI API integration with Google's Gemini API so the autonomous AI creator can use Gemini for editorial decisions and post generation.
+
+### Purpose
+
+Used to migrate the AI layer from OpenAI to Gemini.
+
+The application uses the `@google/genai` package.
+
+---
+
+## 12. Environment Configuration
+
+### Prompt
+
+> Move API keys, MongoDB connection strings, model names, frontend URLs, autonomy intervals, publishing thresholds, and other configuration values into environment variables instead of hard-coding them.
+
+### Purpose
+
+Used to keep configuration and credentials outside the source code.
+
+Environment variables include:
+
+- `MONGODB_URI`
+- `GEMINI_API_KEY`
+- `GEMINI_MODEL`
+- `FRONTEND_URL`
+- `AUTONOMY_INTERVAL_MINUTES`
+- `MIN_PUBLISH_SCORE`
+- `MAX_TOPICS_PER_CYCLE`
+
+---
+
+## 13. REST API
+
+### Prompt
+
+> Create REST API endpoints for initializing an agent, retrieving the agent feed, retrieving agent status, and retrieving editorial decisions.
+
+### Purpose
+
+Used to connect the autonomous backend with the frontend.
+
+Important endpoints include:
+
+- `GET /health`
 - `POST /api/agent/init`
-- `GET /api/agent/feed?agentId=...`
+- `GET /api/agent/:agentId/status`
+- `GET /api/agent/:agentId/decisions`
+- `GET /api/agent/feed?agentId=<agentId>`
 
 ---
 
-## Future prompt log
+## 14. Health Check
 
-Add every significant ChatGPT prompt used to build, debug, modify, deploy, or improve this project below this line.
+### Prompt
 
+> Add a health endpoint that can be used to verify that the backend service is running.
 
+### Purpose
 
-## Gemini migration prompt
+Used for local testing and deployment verification.
 
-- Replace the paid OpenAI API integration with the official Google `@google/genai` SDK while preserving the autonomous agent behavior, editorial scoring, memory, rationale, sources, and API endpoints. Use a Gemini model available on the free tier and keep the API key server-side only.
+Expected response:
+
+```json
+{
+  "ok": true,
+  "service": "autonomous-ai-creator"
+}
